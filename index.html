@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusIQ — Student Intelligence Platform</title>
+  <meta name="description" content="CampusIQ is your student command center for BML Munjal University. Track attendance, marks, deadlines, and get advice from seniors." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════ TOP NAV ═══════════════ -->
+  <nav class="top-nav" id="topNav">
+    <div class="nav-left">
+      <a href="/" class="logo glitch-logo" id="logo" data-text="CampusIQ">Campus<span class="logo-iq">IQ</span></a>
+    </div>
+    <div class="nav-center" id="navCenter">
+      <!-- SVG Goo filter — makes overlapping shapes merge organically -->
+      <svg class="goo-filter-svg" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="gooFilter">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur" />
+            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9" result="goo" />
+            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+          </filter>
+        </defs>
+      </svg>
+      <!-- Gooey layer: pill + particles, with SVG goo filter applied -->
+      <div class="gooey-container" id="gooeyContainer">
+        <div class="gooey-pill" id="gooeyPill"></div>
+      </div>
+      <!-- Text layer — always crisp, sits on top -->
+      <div class="gooey-text-layer">
+        <button class="tab-btn active" data-tab="academic" id="tabAcademic">Academic</button>
+        <button class="tab-btn" data-tab="whatsdue" id="tabWhatsDue">What's Due</button>
+        <button class="tab-btn" data-tab="asksenior" id="tabAskSenior">Ask a Senior</button>
+      </div>
+      <div class="tab-indicator" id="tabIndicator"></div>
+    </div>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ═══════════════ MAIN CONTENT ═══════════════ -->
+  <main class="main-content" id="mainContent">
+
+    <!-- ▸ TAB 1: ACADEMIC ▸ -->
+    <section class="tab-panel active" id="panelAcademic">
+      <!-- Sub-tabs -->
+      <div class="sub-tabs" id="academicSubTabs">
+        <button class="sub-tab active" data-subtab="attendance" id="subTabAttendance">Attendance</button>
+        <button class="sub-tab" data-subtab="marks" id="subTabMarks">Marks</button>
+      </div>
+
+      <!-- Attendance Sub-Panel -->
+      <div class="sub-panel active" id="subPanelAttendance">
+        <div class="drop-zone" id="attendanceDropZone">
+          <div class="drop-zone-content" id="attendanceDropContent">
+            <svg class="drop-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M24 4v28M12 20l12 12 12-12" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 34v6a4 4 0 004 4h32a4 4 0 004-4v-6" stroke-linecap="round"/>
+            </svg>
+            <p class="drop-label">Drop your Maitri attendance screenshot</p>
+            <p class="drop-hint">or click to browse</p>
+          </div>
+          <img class="drop-preview hidden" id="attendancePreview" alt="Preview" />
+          <input type="file" class="file-input" id="attendanceFileInput" accept="image/*" />
+        </div>
+        <button class="btn-extract" id="attendanceExtractBtn">Extract &amp; Analyse</button>
+
+        <!-- Loading State -->
+        <div class="loading-state hidden" id="attendanceLoading">
+          <div class="spinner"></div>
+          <p>Analysing your screenshot...</p>
+        </div>
+
+        <!-- Results -->
+        <div class="results hidden" id="attendanceResults">
+          <div class="stat-strip" id="attendanceStatStrip"></div>
+          <div class="subject-grid" id="attendanceSubjectGrid"></div>
+        </div>
+
+        <!-- Future Teaser -->
+        <div class="teaser-strip">
+          <span class="teaser-heading">Where this is going →</span>
+          <div class="teaser-timeline">
+            <div class="teaser-item"><span class="teaser-dot"></span>Soon: Chrome extension syncs your Maitri data nightly, no screenshots needed.</div>
+            <div class="teaser-item"><span class="teaser-dot"></span>Later: WhatsApp + Google Classroom feed everything here automatically.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Marks Sub-Panel -->
+      <div class="sub-panel" id="subPanelMarks">
+        <div class="drop-zone" id="marksDropZone">
+          <div class="drop-zone-content" id="marksDropContent">
+            <svg class="drop-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M24 4v28M12 20l12 12 12-12" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 34v6a4 4 0 004 4h32a4 4 0 004-4v-6" stroke-linecap="round"/>
+            </svg>
+            <p class="drop-label">Drop your marks or result screenshot</p>
+            <p class="drop-hint">or click to browse</p>
+          </div>
+          <img class="drop-preview hidden" id="marksPreview" alt="Preview" />
+          <input type="file" class="file-input" id="marksFileInput" accept="image/*" />
+        </div>
+        <button class="btn-extract" id="marksExtractBtn">Extract &amp; Analyse</button>
+
+        <!-- Loading State -->
+        <div class="loading-state hidden" id="marksLoading">
+          <div class="spinner"></div>
+          <p>Analysing your screenshot...</p>
+        </div>
+
+        <!-- Results -->
+        <div class="results hidden" id="marksResults">
+          <div class="marks-table-wrap" id="marksTableWrap"></div>
+          <div class="cgpa-display" id="cgpaDisplay"></div>
+          <div class="whatif-simulator" id="whatifSimulator">
+            <h3 class="whatif-title">What-If Simulator</h3>
+            <div class="whatif-sliders" id="whatifSliders"></div>
+            <div class="whatif-projected">
+              <span class="whatif-label">Projected CGPA</span>
+              <span class="whatif-value" id="whatifCgpa">0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Future Teaser -->
+        <div class="teaser-strip">
+          <span class="teaser-heading">Where this is going →</span>
+          <div class="teaser-timeline">
+            <div class="teaser-item"><span class="teaser-dot"></span>Soon: Chrome extension syncs your Maitri data nightly, no screenshots needed.</div>
+            <div class="teaser-item"><span class="teaser-dot"></span>Later: WhatsApp + Google Classroom feed everything here automatically.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ▸ TAB 2: WHAT'S DUE ▸ -->
+    <section class="tab-panel" id="panelWhatsDue">
+      <div class="whatsdue-header">
+        <div class="whatsdue-title-row">
+          <h1 class="whatsdue-title">What's Due</h1>
+          <span class="pending-badge" id="pendingBadge">5</span>
+        </div>
+        <div class="filter-pills">
+          <button class="filter-pill active" data-filter="all" id="filterAll">All</button>
+          <button class="filter-pill" data-filter="overdue" id="filterOverdue">Overdue</button>
+        </div>
+      </div>
+
+      <div class="task-list" id="taskList"></div>
+
+      <div class="add-task-bar">
+        <input type="text" class="add-task-input" id="addTaskInput" placeholder="Add a new task..." />
+        <button class="add-task-btn" id="addTaskBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </div>
+
+      <!-- Friendly Strip -->
+      <div class="friendly-strip">
+        <div class="friendly-emoji">📋✨</div>
+        <p class="friendly-text">You're doing great! Stay on top of things and <strong>crush this semester</strong>.<br/>Soon, Google Classroom + WhatsApp will auto-fill everything here for you 💬</p>
+      </div>
+    </section>
+
+    <!-- ▸ TAB 3: ASK A SENIOR ▸ -->
+    <section class="tab-panel" id="panelAskSenior">
+      <div class="senior-layout">
+        <!-- Left: Post Form -->
+        <aside class="post-form-col">
+          <h2 class="form-title">Ask a Question</h2>
+          <div class="form-group">
+            <label for="yearSelect">Your Year</label>
+            <select id="yearSelect" class="form-select">
+              <option value="" disabled selected>Select your year</option>
+              <option>1st Year CSE</option>
+              <option>2nd Year CSE</option>
+              <option>3rd Year CSE</option>
+              <option>4th Year CSE</option>
+              <option>1st Year ECE</option>
+              <option>2nd Year ECE</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="categorySelect">Category</label>
+            <select id="categorySelect" class="form-select">
+              <option value="" disabled selected>Select category</option>
+              <option>Academics</option>
+              <option>Placements</option>
+              <option>Electives</option>
+              <option>Campus Life</option>
+              <option>Projects</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="questionTextarea">Your Question</label>
+            <textarea id="questionTextarea" class="form-textarea" placeholder="e.g. Which elective is worth it for placements? Which prof is actually good for Maths?" rows="5"></textarea>
+          </div>
+          <div class="incognito-row">
+            <span class="incognito-label">Incognito Mode</span>
+            <label class="toggle-switch" id="incognitoToggle">
+              <input type="checkbox" id="incognitoCheckbox" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <p class="incognito-hint hidden" id="incognitoHint">Your year is also hidden from others.</p>
+          <button class="btn-post" id="postQuestionBtn">Post Question</button>
+        </aside>
+
+        <!-- Right: Questions Feed -->
+        <div class="questions-feed" id="questionsFeed"></div>
+      </div>
+
+      <!-- Decorative Strip -->
+      <div class="deco-strip">
+        <div class="deco-bg-icons">📚 🎓 📅 🗓️ 📖 ✏️ 🎯 💡</div>
+        <div class="deco-content">
+          <div class="deco-emoji">🧠💡</div>
+          <p class="deco-text">This is becoming a <strong>searchable knowledge base</strong> — placement intel, elective reviews, prof ratings — all from students who lived it. <strong>Real talk, real advice.</strong></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Lanyard Badge — top-right corner -->
+  <div class="lanyard-container" id="lanyardContainer">
+    <svg class="lanyard-rope-svg" id="lanyardRopeSvg">
+      <defs>
+        <linearGradient id="ropeGradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#00d4aa" />
+          <stop offset="50%" stop-color="#00b894" />
+          <stop offset="100%" stop-color="#00d4aa" />
+        </linearGradient>
+      </defs>
+      <path id="lanyardRopePath" fill="none" stroke="url(#ropeGradient)" stroke-width="18" stroke-linecap="round" />
+    </svg>
+    <div class="lanyard-card" id="lanyardCard">
+      <div class="lanyard-clip"></div>
+      <div class="lanyard-hole"></div>
+      <img class="lanyard-avatar" src="/img1.avif" alt="Godspeed" />
+      <div class="lanyard-name">Godspeed</div>
+      <div class="lanyard-role">Developer</div>
+      <div class="lanyard-badge-bar">CAMPUSIQ</div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script type="module" src="/main.js"></script>
+</body>
+</html>
